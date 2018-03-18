@@ -55,8 +55,7 @@ public class SwayAnimation extends Animation {
 
 	@Override
 	public void tick() {
-				
-		if(tickCount ++ == 30){
+		if(tickCount++ == 30){
 			flag = !flag;
 			tickCount = 0;
 		}

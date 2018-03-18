@@ -54,10 +54,6 @@ public abstract class IObject {
 			f.createNewFile();
 		}
 		
-		System.out.println(vertexList.size());
-		System.out.println(edgeList.size());
-		System.out.println(faceList.size());
-		
 		JSONObject o = new JSONObject();
 		
 		JSONArray vertices = new JSONArray();
@@ -77,8 +73,8 @@ public abstract class IObject {
 			JSONObject oe = new JSONObject();
 			IEdge e = entry.getValue();
 			oe.put("label", entry.getKey());
-			oe.put("v1", e.i1.label);
-			oe.put("v2", e.i2.label);
+			oe.put("v1", e.v1.label);
+			oe.put("v2", e.v2.label);
 			edges.put(oe);
 		}
 		o.put("edges", edges);
@@ -88,9 +84,9 @@ public abstract class IObject {
 			JSONObject ov = new JSONObject();
 			ITriangle t = entry.getValue();
 			ov.put("label", entry.getKey());
-			ov.put("e1", t.i1.label);
-			ov.put("e2", t.i2.label);
-			ov.put("e3", t.i3.label);
+			ov.put("e1", t.e1.label);
+			ov.put("e2", t.e2.label);
+			ov.put("e3", t.e3.label);
 			vertices.put(ov);
 		}
 		o.put("faces", faces);

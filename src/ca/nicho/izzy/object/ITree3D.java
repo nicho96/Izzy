@@ -116,8 +116,8 @@ public class ITree3D extends IObject {
 		gl.glBegin(GL2.GL_LINES);
 		//drawFromEdgeList(gl);
 		
-		int i = (int)(this.interations * 4 * root.length / GLUtils.distance(ox, oy, oz, cx, cy, cz)) + 1;
-		drawRec(gl, root, i);
+		//int i = (int)(this.interations * 4 * root.length / GLUtils.distance(ox, oy, oz, cx, cy, cz)) + 1;
+		drawRec(gl, root, this.interations);
 		
 		gl.glEnd();
 	}
@@ -127,8 +127,8 @@ public class ITree3D extends IObject {
 			if(e.r != -1 && e.g != -1 && e.b != -1){
 				gl.glColor3f(e.r, e.g, e.b);
 			}	
-			gl.glVertex3f(e.i1.X(), e.i1.Y(), e.i1.Z());
-			gl.glVertex3f(e.i2.X(), e.i2.Y(), e.i2.Z());
+			gl.glVertex3f(e.v1.X(), e.v1.Y(), e.v1.Z());
+			gl.glVertex3f(e.v2.X(), e.v2.Y(), e.v2.Z());
 		}
 	}
 	
@@ -141,8 +141,8 @@ public class ITree3D extends IObject {
 			gl.glColor3f(e.r, e.g, e.b);
 		}	
 		
-		gl.glVertex3f(e.i1.X(), e.i1.Y(), e.i1.Z());
-		gl.glVertex3f(e.i2.X(), e.i2.Y(), e.i2.Z());
+		gl.glVertex3f(e.v1.X(), e.v1.Y(), e.v1.Z());
+		gl.glVertex3f(e.v2.X(), e.v2.Y(), e.v2.Z());
 		
 		for(Branch c : b.branches) {
 			drawRec(gl, c, i - 1);

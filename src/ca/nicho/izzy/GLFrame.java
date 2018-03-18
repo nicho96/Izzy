@@ -22,8 +22,9 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import ca.nicho.izze.anim.Animation;
-import ca.nicho.izzy.object.IObject;
-import ca.nicho.izzy.object.ITree3D;
+import ca.nicho.izzy.scenes.NatureScene;
+import ca.nicho.izzy.scenes.Scene;
+import ca.nicho.izzy.scenes.TestScene;
 
 public class GLFrame extends JFrame implements GLEventListener {
 
@@ -31,39 +32,28 @@ public class GLFrame extends JFrame implements GLEventListener {
 	public static void main(String[] s){	
 		GLFrame frame = new GLFrame();
 		
-		for(int i = 0; i < 80; i++){
-			float r = 0.4f + (float)Math.random() * 0.2f;
-			float g = 0.5f + (float)Math.random() * 0.5f;
-			float b = 0.4f + (float)Math.random() * 0.2f;
-			float x = (float)Math.random() * 3;
-			float z = (float)Math.random() * 3;
-			ITree3D f = new ITree3D(1, 4, x, 0, z, r, g, b);
-			frame.addObject(f);
-		}
+		frame.scenes.add(new NatureScene(frame));
+		frame.scenes.add(new TestScene(frame));
 		
 		frame.initFrame();
-
-		//frame.registerAnimation(new SwayAnimation(f, 0.01f));
 	}
 	
+	public int currentScene = 0;
+	public ArrayList<Scene> scenes = new ArrayList<Scene>();
+ 	
 	private Robot robot;
-	
-	private IObject a;
-	
+		
 	protected Timer timer;
 	
 	protected GLCanvas canvas;
 	protected GLU glu;
 	protected GLUT glut;
 	
-	private ArrayList<IObject> objects = new ArrayList<IObject>();
-	private ArrayList<Animation> animations = new ArrayList<Animation>();
-	
 	private float distance = 100;
 	
-	private float cameraX = 0;
-	private float cameraY = 1;
-	private float cameraZ = 0;
+	public float cameraX = 0;
+	public float cameraY = 1;
+	public float cameraZ = 0;
 	
 	private float lookatX = 0;
 	private float lookatY = 0f;
@@ -102,9 +92,14 @@ public class GLFrame extends JFrame implements GLEventListener {
 	}
 	
 	public void timerUpdate(){
-		for(Animation a : animations){
-			a.tick();
+		
+		if(currentScene >= 0 && currentScene < scenes.size()){
+			Scene scene = scenes.get(currentScene);
+			for(Animation a : scene.animations){
+				a.tick();
+			}
 		}
+		
 		this.updateMovement();
 		this.updateMouse();
 		canvas.repaint();
@@ -124,41 +119,14 @@ public class GLFrame extends JFrame implements GLEventListener {
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glClearColor(0.53f, 0.81f, 0.92f, 1f);
-				
-		this.prepareViewport(gl);
-				
-		gl.glColor3f(1, 1, 1);
-		GLUtils.fillXYPlane(gl, 3);
+		this.prepareViewport(gl);				
 		
-		//gl.glTranslatef(-posX, -posY, -posZ);
-		for(IObject o : objects){
-			gl.glPushMatrix();
-			gl.glRotatef(1, 0, 1, 0);
-			o.drawWire(gl, cameraX, cameraY, cameraZ);
-			gl.glPopMatrix();
-			
+		if(currentScene >= 0 && currentScene < scenes.size()){
+			Scene scene = scenes.get(currentScene);
+			scene.drawScene(gl);
 		}
-		
-		drawAxis(gl);	
-				
+						
 		gl.glFlush();
-	}
-	
-	public void drawAxis(GL2 gl){
-		gl.glBegin(GL2.GL_LINES);
-		gl.glColor3f(1, 0, 0); //RED - X
-		gl.glVertex3f(0, 0, 0);
-		gl.glVertex3f(3f, 0, 0);
-
-		gl.glColor3f(0, 1, 0); //GREEN - Y
-		gl.glVertex3f(0, 0, 0);
-		gl.glVertex3f(0, 3f, 0);
-
-		gl.glColor3f(0, 0, 1); // BLUE - Z
-		gl.glVertex3f(0, 0, 0);
-		gl.glVertex3f(0, 0, 3f);
-		gl.glEnd();
 	}
 
 	/**
@@ -177,14 +145,6 @@ public class GLFrame extends JFrame implements GLEventListener {
 		glu.gluPerspective(60, w / (double) h, 0.1f, 100);
 	    glu.gluLookAt(cameraX, cameraY, cameraZ, lookatX, lookatY, lookatZ, 0, 1, 0);	   
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-	}
-	
-	public void registerAnimation(Animation a){
-		this.animations.add(a);
-	}
-
-	public void addObject(IObject o){
-		this.objects.add(o);
 	}
 	
 	@Override
@@ -263,7 +223,6 @@ public class GLFrame extends JFrame implements GLEventListener {
 		lookatX = dx;
 		lookatY = dy;
 		lookatZ = dz;
-		
 	}
 	
 	private void setMouseCenter(){
@@ -312,7 +271,7 @@ public class GLFrame extends JFrame implements GLEventListener {
 				leftPressed = true;
 			}
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-				leftPressed = true;
+				rightPressed = true;
 			}
 			
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
@@ -333,13 +292,36 @@ public class GLFrame extends JFrame implements GLEventListener {
 				leftPressed = false;
 			}
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-				leftPressed = false;
+				rightPressed = false;
 			}
 			
 		}
 		
 		@Override
-		public void keyTyped(KeyEvent e) {}
+		public void keyTyped(KeyEvent e) {
+			if(e.getKeyChar() == '1'){
+				currentScene = 1;
+			}else if(e.getKeyChar() == '2'){
+				currentScene = 2;
+			}else if(e.getKeyChar() == '3'){
+				currentScene = 3;
+			}else if(e.getKeyChar() == '4'){
+				currentScene = 4;
+			}else if(e.getKeyChar() == '5'){
+				currentScene = 5;
+			}else if(e.getKeyChar() == '6'){
+				currentScene = 6;
+			}else if(e.getKeyChar() == '7'){
+				currentScene = 7;
+			}else if(e.getKeyChar() == '8'){
+				currentScene = 8;
+			}else if(e.getKeyChar() == '9'){
+				currentScene = 9;
+			}else if(e.getKeyChar() == '0'){
+				currentScene = 0;
+			}
+			
+		}
 		
 	}
 	

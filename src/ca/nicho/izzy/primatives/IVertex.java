@@ -1,11 +1,9 @@
 package ca.nicho.izzy.primatives;
 
-import java.util.ArrayList;
-
 public class IVertex {
 
 	public String label;
-	private float x, y, z;
+	public float x, y, z;
 	
 	/**
 	 * Create a new vertex.
@@ -47,7 +45,17 @@ public class IVertex {
 		this.y = y;
 		this.z = z;
 	}
+
+	public void coorTranslate(float x, float y, float z) {
+		this.x += x;
+		this.y += y;
+		this.z += z;
+	}
 	
-	
+	public void vectTranslate(IVector v) {
+		x += v.x;
+		y += v.y;
+		z += v.z;
+	}
 	
 }

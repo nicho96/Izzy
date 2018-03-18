@@ -91,8 +91,8 @@ public class ITree2D extends IObject {
 		gl.glBegin(GL2.GL_LINES);
 		gl.glColor3d(r, g, b);
 		for(IEdge e : edgeList.values()){
-			gl.glVertex3f(e.i1.X(), e.i1.Y(), e.i1.Z());
-			gl.glVertex3f(e.i2.X(), e.i2.Y(), e.i2.Z());
+			gl.glVertex3f(e.v1.X(), e.v1.Y(), e.v1.Z());
+			gl.glVertex3f(e.v2.X(), e.v2.Y(), e.v2.Z());
 		}
 		gl.glEnd();		
 	}
