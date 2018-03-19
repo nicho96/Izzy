@@ -24,7 +24,9 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import ca.nicho.izze.anim.Animation;
 import ca.nicho.izzy.scenes.NatureScene;
 import ca.nicho.izzy.scenes.Scene;
+import ca.nicho.izzy.scenes.SmoothNatureScene;
 import ca.nicho.izzy.scenes.TestScene;
+import ca.nicho.izzy.scenes.TreeScene;
 
 public class GLFrame extends JFrame implements GLEventListener {
 
@@ -33,7 +35,9 @@ public class GLFrame extends JFrame implements GLEventListener {
 		GLFrame frame = new GLFrame();
 		
 		frame.scenes.add(new NatureScene(frame));
+		frame.scenes.add(new SmoothNatureScene(frame));
 		frame.scenes.add(new TestScene(frame));
+		frame.scenes.add(new TreeScene(frame));
 		
 		frame.initFrame();
 	}
@@ -63,6 +67,7 @@ public class GLFrame extends JFrame implements GLEventListener {
 	private boolean leftPressed;
 	private boolean upPressed;
 	private boolean downPressed;
+	private boolean screenshot = false;
 		
 	float alpha = (float)Math.PI;
 	float beta = 0;
@@ -127,6 +132,10 @@ public class GLFrame extends JFrame implements GLEventListener {
 		}
 						
 		gl.glFlush();
+		if(screenshot){
+			GLUtils.saveImage(gl, 2 * canvas.getWidth(), 2 * canvas.getHeight());
+			screenshot = false;
+		}
 	}
 
 	/**
@@ -319,6 +328,8 @@ public class GLFrame extends JFrame implements GLEventListener {
 				currentScene = 9;
 			}else if(e.getKeyChar() == '0'){
 				currentScene = 0;
+			}else if(e.getKeyChar() == 'p'){
+				screenshot = true;
 			}
 			
 		}

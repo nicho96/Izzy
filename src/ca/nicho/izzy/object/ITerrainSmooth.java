@@ -4,47 +4,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import com.jogamp.opengl.GL2;
-
 import ca.nicho.izzy.primatives.IEdge;
 import ca.nicho.izzy.primatives.ITriangle;
 import ca.nicho.izzy.primatives.IVector;
 import ca.nicho.izzy.primatives.IVertex;
 
-public class IShitstorm extends IObject {
-	public enum splitMode {
-	    MEDIAN, SERPINSKI, BARYCENTRIC
+public class ITerrainSmooth extends IHill {
+
+	public ITerrainSmooth(int dim, float lat, float lon, float y) {
+		super(dim, lat, lon, y);
 	}
 	
-	public IShitstorm(){
-		
-		IVertex w1 = new IVertex(1,0,0, vertexList.size() + "v");
-		IVertex w2 = new IVertex(0,1,0, vertexList.size() + "v");
-		IVertex o1 = new IVertex(1,1,0, vertexList.size() + "v");
-		IVertex o2 = new IVertex(0,0,0, vertexList.size() + "v");
-		
-		IEdge l1 = new IEdge(w1,w2, edgeList.size() + "e");
-		IEdge l2 = new IEdge(w1,o1, edgeList.size() + "e");
-		IEdge l3 = new IEdge(w2,o1, edgeList.size() + "e");
-		IEdge l4 = new IEdge(w1,o2, edgeList.size() + "e");
-		IEdge l5 = new IEdge(w2,o2, edgeList.size() + "e");
-		
-		ITriangle a1 = new ITriangle(l1, l2, l3);
-		ITriangle a2 = new ITriangle(l1, l4, l5);
-		
-		a2.getVertices();
-		
-		l1.t1 = a1;
-		l1.t2 = a2;
-		
-		E2FList please = new E2FList();
-		please.list.add(l1);
-		
-		please.medianDivide(5);
-		HashSet<ITriangle> triangles = please.getITriangles();
-		for(ITriangle t : triangles){
-			this.faceList.put(faceList.size() + "f", t);
-		}
+	public void smoothen(){
+		E2FList smoothList = new E2FList();
+		smoothList.list.addAll(this.edgeList.values());
+		smoothList.medianDivide(5);
 	}
 	
 	public class E2FList {
@@ -63,6 +37,7 @@ public class IShitstorm extends IObject {
 					//Create a IVertex which bisects the IEdge, and protrudes/intrudes from the IEdge 
 					//by the sum of the respective ITriangles normal unit IVectors to a max factor of 1/5 the length of the IEdge
 					IVertex splitVertex = e2f.paraCoor((float)Math.random() * 0.1f + 0.5f);
+										
 					IVector shift = e2f.t1.getNormalVector();
 					shift.normalize();
 					shift.scale((Math.random()-0.5)*0.2*e2f.getEdgeLength());
@@ -162,36 +137,5 @@ public class IShitstorm extends IObject {
 	
 		return vertices.size() == 3;
 	}
-	
-	
-	public static void serpinskiDivide() {
-		
-	}
-	
-	public static void baricentricDivide() {
-		
-	}
-	
-	public static void roughen(int iterations, int splitMode) {
-		
-	}
 
-
-	@Override
-	public void drawWire(GL2 gl, float cx, float cy, float cz) {
-		
-		for(ITriangle t : faceList.values()){
-			gl.glColor3f((float)Math.random(), (float)Math.random(), (float)Math.random());
-			gl.glBegin(GL2.GL_TRIANGLE_FAN);
-			IVertex v1 = t.v1;
-			IVertex v2 = t.v2;
-			IVertex v3 = t.v3;
-			
-			gl.glVertex3f(v1.X(), v1.Y(), v1.Z());
-			gl.glVertex3f(v2.X(), v2.Y(), v2.Z());
-			gl.glVertex3f(v3.X(), v3.Y(), v3.Z());
-			gl.glEnd();
-		}
-	}
-	
 }

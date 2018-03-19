@@ -24,7 +24,7 @@ public class IHill extends IObject {
 		for(int x = 0; x < dim; x++){
 			for(int z = 0; z < dim; z++){
 				String l = vertexList.size() + "v";
-				grid[x][z] = new IVertex((float)x / lat / dim, y, z / lon / dim, l);
+				grid[x][z] = new IVertex((float)x / (float)dim * lat, y, z / (float)dim * lon, l);
 				this.vertexList.put(l, grid[x][z]);
 			}
 		}
@@ -64,17 +64,25 @@ public class IHill extends IObject {
 					e3 = new IEdge(v1, v4, l3);
 					this.edgeList.put(l3, e3);
 				}
+				
+				ITriangle face1 = null;
+				ITriangle face2 = null;
 									
 				if(v1 != null && v2 != null && v3 != null){
 					String l = faceList.size() + "f";
-					ITriangle face = new ITriangle(v1, v2, v3);
-					this.faceList.put(l, face);
+					face1 = new ITriangle(v1, v2, v3);
+					this.faceList.put(l, face1);
 				}
 				
 				if(v1 != null && v3 != null && v4 != null){
 					String l = faceList.size() + "f";
-					ITriangle face = new ITriangle(v1, v3, v4);
-					this.faceList.put(l, face);
+					face2 = new ITriangle(v1, v3, v4);
+					this.faceList.put(l, face2);
+				}
+				
+				if(face1 != null && face2 != null){
+					e2.t1 = face1;
+					e2.t2 = face2;
 				}
 				
 			}
@@ -152,12 +160,17 @@ public class IHill extends IObject {
 				face.r = 0.88f;
 				face.g = 0.66f;
 				face.b = 0.37f;
-			}else if(minY < globalAverageHeight) {
+			}else if(minY < globalAverageHeight / 10) {
+				
+				/*face.r = 1 - (float)Math.random() * 0.1f;
+				face.g = 1 - (float)Math.random() * 0.1f;
+				face.b = 1 - (float)Math.random() * 0.1f;*/
+				
 				face.r = (float)Math.random() * 0.1f;
 				face.g = (float)Math.random() * 0.05f + 0.4f;
 				face.b = (float)Math.random() * 0.1f;
 			}else{
-				float gray = 0.6f + (maxY / globalMaxY) * 0.4f;
+				float gray = (float)Math.pow(0.5f + (maxY / globalMaxY) * 0.5f, 2);
 				face.r = gray;
 				face.g = gray;
 				face.b = gray;

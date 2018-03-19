@@ -31,4 +31,17 @@ public class IEdge {
 		return new IVertex(v1.x + t*(v2.x-v1.x), v1.y + t*(v2.y-v1.y), v1.z + t*(v2.z-v1.z), null);
 	}
 	
+	public ITriangle getRandITriangle() {
+		return (Math.random() < 0.5) ? t1 : t2;
+	}
+	
+	public IVector getAvgNormalIVector() {
+		IVector v1 = t1.getNormalVector();
+		IVector v2 = t2.getNormalVector();
+		v1.normalize();
+		v2.normalize();
+		v1.add(v2);
+		return v1;
+	}
+	
 }

@@ -4,25 +4,26 @@ import com.jogamp.opengl.GL2;
 
 import ca.nicho.izzy.GLFrame;
 import ca.nicho.izzy.GLUtils;
-import ca.nicho.izzy.object.IHill;
 import ca.nicho.izzy.object.IObject;
+import ca.nicho.izzy.object.ITerrainSmooth;
 import ca.nicho.izzy.object.ITree3D;
 import ca.nicho.izzy.primatives.IVertex;
 
-public class NatureScene extends Scene {
+public class SmoothNatureScene extends Scene {
 
-	private IHill hill;
+	private ITerrainSmooth terrain;
 	
-	public NatureScene(GLFrame frame) {
+	public SmoothNatureScene(GLFrame frame) {
 		super(frame);
 		
-		hill = new IHill(100, 5f, 5f, 0.001f);
+		terrain = new ITerrainSmooth(100, 5f, 5f, 0.001f);
 		createHills(5, 20, 5, 20);
 		createLakes(2, 5, 5, 10);
-		hill.findMaxY();
+		terrain.findMaxY();
 		growTrees();
-		hill.colorizeSurface();
-		addObject(hill);
+		terrain.smoothen();
+		terrain.colorizeSurface();
+		addObject(terrain);
 		
 	}
 	
@@ -33,15 +34,15 @@ public class NatureScene extends Scene {
 		for(int i = min; i <= range; i++){
 			
 			int radius = (int)(Math.random() * spanRange) + minSpan;
-			int x = (int)(Math.random() * hill.grid.length);
-			int z = (int)(Math.random() * hill.grid[0].length);
+			int x = (int)(Math.random() * terrain.grid.length);
+			int z = (int)(Math.random() * terrain.grid[0].length);
 			float height = -(float)Math.random() / 3 - 0.01f;	
 			
-			hill.makeIdent(x - radius / 2, z, height / 4, radius / 2);
-			hill.makeIdent(x + radius / 2, z, height / 4, radius / 2);
-			hill.makeIdent(x, z - radius / 2, height / 4, radius / 2);
-			hill.makeIdent(x, z + radius / 2, height / 4, radius / 2);
-			hill.makeIdent(x, z, height, radius);
+			terrain.makeIdent(x - radius / 2, z, height / 4, radius / 2);
+			terrain.makeIdent(x + radius / 2, z, height / 4, radius / 2);
+			terrain.makeIdent(x, z - radius / 2, height / 4, radius / 2);
+			terrain.makeIdent(x, z + radius / 2, height / 4, radius / 2);
+			terrain.makeIdent(x, z, height, radius);
 						
 		}
 
@@ -54,15 +55,15 @@ public class NatureScene extends Scene {
 		for(int i = min; i <= range; i++){
 			
 			int radius = (int)(Math.random() * spanRange) + minSpan;
-			int x = (int)(Math.random() * hill.grid.length);
-			int z = (int)(Math.random() * hill.grid[0].length);
+			int x = (int)(Math.random() * terrain.grid.length);
+			int z = (int)(Math.random() * terrain.grid[0].length);
 			float height = (float)Math.random() / 2 + 0.01f;	
 			
-			hill.makeIdent(x - radius / 2, z, height / 4, radius / 2);
-			hill.makeIdent(x + radius / 2, z, height / 4, radius / 2);
-			hill.makeIdent(x, z - radius / 2, height / 4, radius /2);
-			hill.makeIdent(x, z + radius / 2, height / 4, radius /2);
-			hill.makeIdent(x, z, height, radius);
+			terrain.makeIdent(x - radius / 2, z, height / 4, radius / 2);
+			terrain.makeIdent(x + radius / 2, z, height / 4, radius / 2);
+			terrain.makeIdent(x, z - radius / 2, height / 4, radius /2);
+			terrain.makeIdent(x, z + radius / 2, height / 4, radius /2);
+			terrain.makeIdent(x, z, height, radius);
 						
 		}
 
@@ -73,9 +74,9 @@ public class NatureScene extends Scene {
 		int count = 0;
 		
 		while(count < 200){
-			IVertex v = (IVertex)hill.vertexList.values().toArray()[(int)(hill.vertexList.size() * Math.random())];
+			IVertex v = (IVertex)terrain.vertexList.values().toArray()[(int)(terrain.vertexList.size() * Math.random())];
 			if(v.y < 0) continue;
-			float norm = (v.y - hill.globalAverageHeight) / hill.globalMaxY;
+			float norm = (v.y - terrain.globalAverageHeight) / terrain.globalMaxY;
 			boolean choose = norm * norm * 10 < Math.random();
 			if(choose){
 				count++;
@@ -111,8 +112,5 @@ public class NatureScene extends Scene {
 		GLUtils.drawAxis(gl);
 		
 	}
-	
-	
-
 	
 }
