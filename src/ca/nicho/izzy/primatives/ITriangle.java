@@ -9,7 +9,7 @@ public class ITriangle {
 	public float r;
 	public float g;
 	public float b;
-	
+		
 	public ITriangle(IEdge i1, IEdge i2, IEdge i3){
 		this.e1 = i1;
 		this.e2 = i2;
@@ -60,6 +60,17 @@ public class ITriangle {
 					(a*e2.v2.z + b*e1.v1.z + c*e1.v2.z)/sum,
 					null);
 		}
+	}
+	
+	public float getCharacteristicConst(){
+		IVector v = getNormalVector();
+		IVertex p = e1.v1;
+		return -1*(v.x*p.x+v.y*p.y+v.z*p.z);
+	}
+	
+	public float getPointDist(IVertex a){
+		IVector v = getNormalVector();
+		return Math.abs(v.x*a.x + v.y*a.y+ v.z*a.z + getCharacteristicConst());
 	}
 	
 	public HashSet<IVertex> getVertices(){

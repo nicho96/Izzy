@@ -9,6 +9,7 @@ import ca.nicho.izzy.primatives.ITriangle;
 import ca.nicho.izzy.primatives.IVector;
 import ca.nicho.izzy.primatives.IVertex;
 
+@Deprecated
 public class ITerrainSmooth extends IHill {
 
 	public ITerrainSmooth(int dim, float lat, float lon, float y) {
@@ -18,7 +19,13 @@ public class ITerrainSmooth extends IHill {
 	public void smoothen(){
 		E2FList smoothList = new E2FList();
 		smoothList.list.addAll(this.edgeList.values());
-		smoothList.medianDivide(5);
+		this.edgeList.clear();
+		for(IEdge e : smoothList.list)
+			edgeList.put(e.label, e);
+		this.faceList.clear();
+		for(ITriangle f : smoothList.getITriangles())
+			faceList.put(faceList.size() + "e", f);
+		
 	}
 	
 	public class E2FList {
@@ -37,7 +44,9 @@ public class ITerrainSmooth extends IHill {
 					//Create a IVertex which bisects the IEdge, and protrudes/intrudes from the IEdge 
 					//by the sum of the respective ITriangles normal unit IVectors to a max factor of 1/5 the length of the IEdge
 					IVertex splitVertex = e2f.paraCoor((float)Math.random() * 0.1f + 0.5f);
-										
+									
+					if(e2f.t1 == null) continue;
+					
 					IVector shift = e2f.t1.getNormalVector();
 					shift.normalize();
 					shift.scale((Math.random()-0.5)*0.2*e2f.getEdgeLength());

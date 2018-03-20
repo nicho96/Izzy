@@ -35,7 +35,6 @@ public class GLFrame extends JFrame implements GLEventListener {
 		GLFrame frame = new GLFrame();
 		
 		frame.scenes.add(new NatureScene(frame));
-		frame.scenes.add(new SmoothNatureScene(frame));
 		frame.scenes.add(new TestScene(frame));
 		frame.scenes.add(new TreeScene(frame));
 		
@@ -51,7 +50,7 @@ public class GLFrame extends JFrame implements GLEventListener {
 	
 	protected GLCanvas canvas;
 	protected GLU glu;
-	protected GLUT glut;
+	public static GLUT glut;
 	
 	private float distance = 100;
 	

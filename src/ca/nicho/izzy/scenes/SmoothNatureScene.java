@@ -20,8 +20,10 @@ public class SmoothNatureScene extends Scene {
 		createHills(5, 20, 5, 20);
 		createLakes(2, 5, 5, 10);
 		terrain.findMaxY();
-		growTrees();
 		terrain.smoothen();
+		System.out.println(terrain.faceList.size());
+		growTrees();
+		System.out.println(terrain.faceList.size());
 		terrain.colorizeSurface();
 		addObject(terrain);
 		

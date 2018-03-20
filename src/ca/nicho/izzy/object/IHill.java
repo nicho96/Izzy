@@ -1,5 +1,7 @@
 package ca.nicho.izzy.object;
 
+import java.util.HashMap;
+
 import com.jogamp.opengl.GL2;
 
 import ca.nicho.izzy.primatives.IEdge;
@@ -40,30 +42,33 @@ public class IHill extends IObject {
 				IEdge e1 = null;
 				IEdge e2 = null;
 				IEdge e3 = null;
-				
+
 				v1 = grid[x][z];
 				int xr = x + 1;
 				int zd = z + 1;
 				
+				if(zd < dim){
+					v4 = grid[x][zd];
+					String l3 = edgeList.size() + "e";
+					e3 = new IEdge(v1, v4, l3);
+					this.edgeList.put(e3.label, e3);
+					
+				}
+				
 				if(xr < dim){
-					String l1 = edgeList.size() + "e";
 					v2 = grid[xr][z];
+					String l1 = edgeList.size() + "e";
 					e1 = new IEdge(v1, v2, l1);
-					this.edgeList.put(l1, e1);
+					this.edgeList.put(e1.label, e1);
+					
 					if(zd < dim){
-						String l2 = edgeList.size() + "e";
 						v3 = grid[xr][zd];
+						String l2 = edgeList.size() + "e";
 						e2 = new IEdge(v1, v3, l2);
-						this.edgeList.put(l2, e2);	
+						this.edgeList.put(e2.label, e2);		
 					}
 				}
 				
-				if(zd < dim){
-					String l3 = edgeList.size() + "e";
-					v4 = grid[x][zd];
-					e3 = new IEdge(v1, v4, l3);
-					this.edgeList.put(l3, e3);
-				}
 				
 				ITriangle face1 = null;
 				ITriangle face2 = null;

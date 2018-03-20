@@ -58,4 +58,9 @@ public class IVertex {
 		z += v.z;
 	}
 	
+	@Override
+	public String toString(){
+		return "V(" + x + ", " + y + ", " + z + " " + label + ")";
+	}
+	
 }

@@ -44,4 +44,9 @@ public class IEdge {
 		return v1;
 	}
 	
+	@Override
+	public String toString(){
+		return "E(" + v1 + ", " + v2 + ")";
+	}
+	
 }
